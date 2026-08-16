@@ -1,0 +1,7 @@
+services:
+  k6:
+    image: grafana/k6
+    volumes:
+      - .:/scripts
+    command: run /scripts/happy-path.js
+    network_mode: host
