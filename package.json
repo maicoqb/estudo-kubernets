@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "seed:products": "tsx --tsconfig seeds/tsconfig.json seeds/products.seed.ts",
-    "load-test": "docker compose -f load-tests/docker-compose.yml up"
+    "test:happy-path": "docker compose -f load-tests/docker-compose.yml up"
   },
   "private": true,
   "devDependencies": {
