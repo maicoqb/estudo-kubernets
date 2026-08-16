@@ -11,3 +11,7 @@ Estudo de caso sobre Kubernetes usando uma e-store como exemplo. Começamos com 
 | 2 | App morre/trava | Container fica unhealthy, sem recuperação | Probes detectam e reiniciam |
 | 3 | Fila acumula | Workers não dão conta, pedidos atrasam | KEDA escala workers por tamanho da fila |
 | 4 | Busca lenta (SLA violado) | App saudável mas experiência degradada | HPA escala por métrica custom de negócio |
+
+## Documentação
+
+- [Arquitetura](./ARCHITECTURE.md)
