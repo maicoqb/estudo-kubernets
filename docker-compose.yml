@@ -10,5 +10,21 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  products-service:
+    build:
+      context: .
+      dockerfile: apps/products-service/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.5"
+
 volumes:
   pgdata:
