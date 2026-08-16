@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsModule } from './products/products.module';
+import { MetricsModule } from './metrics/metrics.module';
 import { HealthController } from './health.controller';
 import { Product } from './products/product.entity';
 
@@ -13,6 +14,7 @@ import { Product } from './products/product.entity';
       synchronize: true,
     }),
     ProductsModule,
+    MetricsModule,
   ],
   controllers: [HealthController],
 })
