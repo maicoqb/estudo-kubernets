@@ -23,7 +23,27 @@ docker build -f seeds/Dockerfile -t seed-products:latest seeds/
 #################################
 echo "==> Aplicando manifests..."
 minikube kubectl -- apply -f infra/k8s/namespace.yaml
+
+echo "==> Criando ConfigMaps a partir dos arquivos..."
+minikube kubectl -- create configmap prometheus-config \
+  --from-file=prometheus.yml=infra/prometheus/prometheus.yml \
+  -n estore --dry-run=client -o yaml | minikube kubectl -- apply -f -
+
+minikube kubectl -- create configmap grafana-datasources \
+  --from-file=datasources.yml=infra/grafana/datasources.yml \
+  -n estore --dry-run=client -o yaml | minikube kubectl -- apply -f -
+
+minikube kubectl -- create configmap grafana-dashboards-provider \
+  --from-file=dashboards.yml=infra/grafana/dashboards.yml \
+  -n estore --dry-run=client -o yaml | minikube kubectl -- apply -f -
+
+minikube kubectl -- create configmap grafana-dashboards-json \
+  --from-file=infra/grafana/dashboards/products-service.json \
+  -n estore --dry-run=client -o yaml | minikube kubectl -- apply -f -
+
 minikube kubectl -- apply -f infra/k8s/postgres.yaml
+minikube kubectl -- apply -f infra/k8s/prometheus.yaml
+minikube kubectl -- apply -f infra/k8s/grafana.yaml
 minikube kubectl -- apply -f infra/k8s/products-service.yaml
 
 echo "==> Rodando seed..."
@@ -32,11 +52,17 @@ minikube kubectl -- apply -f infra/k8s/seed-job.yaml
 
 
 #################################
-###    Fazendo Port-Forward   ###
+###      Tunnel e Grafana     ###
 #################################
-echo "==> Iniciando port-forward..."
-pkill -f "port-forward.*products-service" 2>/dev/null || true
-minikube kubectl -- port-forward -n estore svc/products-service 3000:3000 > /dev/null 2>&1 &
+echo "==> Aguardando pods ficarem prontos..."
+minikube kubectl -- wait --for=condition=Ready pod -l app=products-service -n estore --timeout=300s
+minikube kubectl -- wait --for=condition=Ready pod -l app=grafana -n estore --timeout=300s
+
+echo "==> Iniciando tunnel e port-forward..."
+pkill -f "minikube tunnel" 2>/dev/null || true
+pkill -f "port-forward.*grafana" 2>/dev/null || true
+minikube tunnel > /dev/null 2>&1 &
+minikube kubectl -- port-forward -n estore svc/grafana 3001:3000 > /dev/null 2>&1 &
 
 
 #################################
@@ -50,4 +76,5 @@ minikube kubectl -- get pods -n estore
 
 echo ""
 echo "✔ Deploy concluído!"
-echo "  App disponível em: http://localhost:3000/api/products"
+echo "  App: http://localhost:3000/api/products"
+echo "  Grafana: http://localhost:3001 (admin/admin)"
