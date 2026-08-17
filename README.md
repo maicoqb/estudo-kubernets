@@ -17,3 +17,4 @@ Mais informações nos arquivo específicos de cada cenário.
 ## Documentação
 
 - [Arquitetura](./ARCHITECTURE.md)
+- [Passos da Construção](./docs/steps.md)
