@@ -3,9 +3,10 @@ FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
-COPY . .
 
 FROM deps AS builder
+COPY nx.json tsconfig.base.json tsconfig.json ./
+COPY apps/products-service ./apps/products-service
 RUN npx nx build products-service
 
 FROM node:20-alpine

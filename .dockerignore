@@ -4,3 +4,4 @@
 !package-lock.json
 !nx.json
 !tsconfig*.json
+apps/*/dist

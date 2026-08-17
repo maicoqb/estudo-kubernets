@@ -4,8 +4,11 @@
   "license": "MIT",
   "scripts": {
     "seed:products": "tsx --tsconfig seeds/tsconfig.json seeds/products.seed.ts",
-    "test:happy-path": "docker compose -f load-tests/docker-compose.yml run k6 run /scripts/happy-path.js",
-    "test:high-load": "docker compose -f load-tests/docker-compose.yml run k6 run /scripts/high-load.js"
+    "test:happy-path": "docker compose -f load-tests/docker-compose.yml run --rm k6 run /scripts/happy-path.js",
+    "test:high-load": "docker compose -f load-tests/docker-compose.yml run --rm k6 run /scripts/high-load.js",
+    "minikube:start": "minikube start --driver=docker",
+    "k8s:deploy": "bash scripts/k8s-deploy.sh",
+    "k8s:pods": "minikube kubectl -- get pods -n estore"
   },
   "private": true,
   "devDependencies": {
