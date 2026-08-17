@@ -1,7 +1,6 @@
-node_modules
-dist
-.nx
-.git
-load-tests
-seeds
-*.md
+*
+!apps
+!package.json
+!package-lock.json
+!nx.json
+!tsconfig*.json
