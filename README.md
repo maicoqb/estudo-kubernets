@@ -9,9 +9,10 @@ Mais informações nos arquivo específicos de cada cenário.
 | # | Cenário | Problema (Docker) | Solução (Kubernetes) |
 |---|---------|-------------------|---------------------|
 | 0 | [Caminho Feliz](./docs/happy-path.md) | App funcionando normalmente | App funcionando normalmente |
-| 1 | [Excesso de chamadas](./docs/high-load.md) | App degrada, sem reação | HPA escala por latência p95 |
+| 1 | [Excesso de chamadas](./docs/high-load.md) | App degrada, sem reação | HPA escala por CPU |
 | 2 | [App trava](./docs/hang.md) | Container fica "running" mas não responde | Probes detectam e reiniciam |
 | 3 | Fila acumula | Workers não dão conta, pedidos atrasam | KEDA escala workers por tamanho da fila |
+| 4 | Busca lenta (SLA violado) | App saudável mas experiência degradada | HPA escala por métrica custom (latência p95) |
 
 ## Comandos
 

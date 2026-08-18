@@ -27,9 +27,13 @@ Sequência cronológica do estudo.
 
 ## Fase 2
 
-### Cenário 2 — App morre/trava
+### Cenário 2 — App trava (Hang)
 
-_(próximo)_
+#### Introdução do problema (Docker)
+
+1. Endpoint `/api/chaos/hang` — trava o event loop após 1s
+2. Load test com k6 — dispara hang no segundo 60
+3. Docker não detecta (container fica "running")
 
 ## Fase 3
 
