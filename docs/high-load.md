@@ -17,28 +17,20 @@ Script: `load-tests/high-load.js` — rampa progressiva de VUs.
 | Pico | 20s | 300 → 500 |
 | Cooldown | 10s | 500 → 0 |
 
-## Resultado
+## O problema (Docker)
 
-| Métrica | Valor |
-|---------|-------|
-| Requests totais | ~14.400 (~240 req/s) |
-| Taxa de sucesso (HTTP) | 100% |
-| Latência média | 1.06s |
-| Latência p95 | 2.27s |
-| Abaixo de 500ms | 34% |
-| Acima de 500ms | 66% |
+O Docker não faz nada. A app degrada até a carga diminuir.
 
-## Dashboard
+- CPU chegando ao threshold de 50%
 
-- Latência muito acima dos 500ms de threshold
-- Memória acima do threshold de 80% em um momento
-
-![high-load-dashboard](high-load-dashboard.png)
-
-## O problema
-
-O Docker não faz nada. A app degrada e os usuários sofrem até a carga diminuir.
+![high-load-docker-dashboard](high-load-docker-dashboard.png)
 
 ## Solução (Kubernetes)
 
-HPA monitora CPU e escala réplicas automaticamente. Mais pods = mais capacidade = latência estabiliza.
+HPA monitora CPU (threshold 50%) e escala os pods automaticamente.
+
+- CPU chega a 50% → HPA adiciona pods
+- Carga de CPU se distribui entre pods → CPU por pod reduz
+- Carga cai → após 60s de cooldown, pods extras são removidos
+
+![high-load-k8s-dashboard](high-load-k8s-dashboard.png)

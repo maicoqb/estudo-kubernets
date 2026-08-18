@@ -46,6 +46,7 @@ minikube kubectl -- apply -f infra/k8s/prometheus-rbac.yaml
 minikube kubectl -- apply -f infra/k8s/prometheus.yaml
 minikube kubectl -- apply -f infra/k8s/grafana.yaml
 minikube kubectl -- apply -f infra/k8s/products-service.yaml
+minikube kubectl -- apply -f infra/k8s/hpa.yaml
 
 echo "==> Rodando seed..."
 minikube kubectl -- delete job seed-products -n estore --ignore-not-found
