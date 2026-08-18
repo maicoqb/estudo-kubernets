@@ -10,13 +10,6 @@ npm run test:high-load
 
 Script: `load-tests/high-load.js` — rampa progressiva de VUs.
 
-| Fase | Duração | VUs |
-|------|---------|-----|
-| Ramp-up | 10s | 0 → 100 |
-| Sustentado | 20s | 100 → 300 |
-| Pico | 20s | 300 → 500 |
-| Cooldown | 10s | 500 → 0 |
-
 ## O problema (Docker)
 
 O Docker não faz nada. A app degrada até a carga diminuir.
