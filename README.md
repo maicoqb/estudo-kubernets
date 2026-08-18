@@ -15,15 +15,29 @@ Mais informações nos arquivo específicos de cada cenário.
 
 ## Comandos
 
+### Docker
+
 | Comando | Descrição |
 |---------|-----------|
 | `npm run docker:start` | Sobe a app com Docker Compose |
-| `npm run seed:products` | Popula o banco com 100 produtos |
-| `npm run test:happy-path` | Load test — 50 VUs por 30s |
-| `npm run test:high-load` | Load test — rampa até 500 VUs |
-| `npm run minikube:start` | Inicia o cluster Kubernetes local |
+| `npm run docker:stop` | Para os containers |
+
+### Kubernetes
+
+| Comando | Descrição |
+|---------|-----------|
+| `npm run k8s:start` | Inicia Minikube e deploya tudo |
+| `npm run k8s:stop` | Para o Minikube |
 | `npm run k8s:deploy` | Builda imagem e deploya no Minikube |
 | `npm run k8s:pods` | Lista pods no cluster |
+
+### Tests
+
+| Comando | Descrição |
+|---------|-----------|
+| `npm run test:happy-path` | Load test — 50 VUs por 2min |
+| `npm run test:high-load` | Load test — rampa até 500 VUs por 2min |
+| `npm run test:hang` | Load test — trava a app no segundo 60 |
 
 ## Documentação
 
