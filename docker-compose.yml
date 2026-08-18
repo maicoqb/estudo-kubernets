@@ -67,6 +67,23 @@ services:
           memory: 128M
           cpus: "0.5"
 
+  payments-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: payments-worker
+    environment:
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.5"
+
   rabbitmq:
     image: rabbitmq:3-management
     environment:

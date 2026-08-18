@@ -8,6 +8,9 @@
     },
     {
       "path": "./apps/orders-service"
+    },
+    {
+      "path": "./apps/payments-worker"
     }
   ]
 }

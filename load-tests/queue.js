@@ -14,6 +14,7 @@ export default function () {
   const payload = JSON.stringify({
     productId: Math.floor(Math.random() * 100) + 1,
     quantity: Math.floor(Math.random() * 5) + 1,
+    totalPrice: Number((Math.random() * 200 + 10).toFixed(2)),
   });
 
   const res = http.post('http://localhost:3002/api/orders', payload, {
