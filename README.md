@@ -10,7 +10,7 @@ Mais informações nos arquivo específicos de cada cenário.
 |---|---------|-------------------|---------------------|
 | 0 | [Caminho Feliz](./docs/happy-path.md) | App funcionando normalmente | App funcionando normalmente |
 | 1 | [Excesso de chamadas](./docs/high-load.md) | App degrada, sem reação | HPA escala por latência p95 |
-| 2 | App morre/trava | Container fica unhealthy, sem recuperação | Probes detectam e reiniciam |
+| 2 | [App trava](./docs/hang.md) | Container fica "running" mas não responde | Probes detectam e reiniciam |
 | 3 | Fila acumula | Workers não dão conta, pedidos atrasam | KEDA escala workers por tamanho da fila |
 
 ## Comandos

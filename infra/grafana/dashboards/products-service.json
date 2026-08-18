@@ -111,7 +111,7 @@
       "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 },
       "targets": [
         {
-          "expr": "count(up{job=\"products-service\"})",
+          "expr": "count(up{job=\"products-service\"} == 1)",
           "legendFormat": "pods"
         }
       ],
