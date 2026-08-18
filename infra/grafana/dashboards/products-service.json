@@ -8,8 +8,8 @@
       "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
       "targets": [
         {
-          "expr": "rate(http_requests_total[1m])",
-          "legendFormat": "{{method}} {{path}} {{status}}"
+          "expr": "sum(rate(http_requests_total[1m])) by (path)",
+          "legendFormat": "{{path}}"
         }
       ],
       "datasource": { "type": "prometheus", "uid": "prometheus" }
@@ -20,8 +20,8 @@
       "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[1m]))",
-          "legendFormat": "p95"
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[1m])) by (le, path))",
+          "legendFormat": "{{path}}"
         }
       ],
       "datasource": { "type": "prometheus", "uid": "prometheus" },
@@ -44,13 +44,44 @@
       }
     },
     {
-      "title": "CPU Usage",
+      "title": "CPU Usage (média)",
       "type": "timeseries",
       "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
       "targets": [
         {
-          "expr": "rate(process_cpu_seconds_total[1m])",
-          "legendFormat": "cpu"
+          "expr": "avg(rate(process_cpu_seconds_total[1m]))",
+          "legendFormat": "cpu avg"
+        }
+      ],
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 0.5 }
+            ]
+          },
+          "custom": {
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Memória (média)",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "avg(process_resident_memory_bytes) / (128 * 1024 * 1024)",
+          "legendFormat": "memory avg"
         }
       ],
       "datasource": { "type": "prometheus", "uid": "prometheus" },
@@ -75,35 +106,35 @@
       }
     },
     {
-      "title": "Memória (RSS)",
+      "title": "Pods ativos",
       "type": "timeseries",
-      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 },
       "targets": [
         {
-          "expr": "process_resident_memory_bytes / (128 * 1024 * 1024)",
-          "legendFormat": "memory"
+          "expr": "count(up{job=\"products-service\"})",
+          "legendFormat": "pods"
         }
       ],
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
         "defaults": {
-          "unit": "percentunit",
           "min": 0,
-          "max": 1,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "red", "value": 0.8 }
-            ]
-          },
-          "custom": {
-            "thresholdsStyle": {
-              "mode": "line"
-            }
-          }
+          "max": 5,
+          "decimals": 0
         }
       }
+    },
+    {
+      "title": "Requests por pod",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 16, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "avg(sum(rate(http_requests_total[1m])) by (instance))",
+          "legendFormat": "avg req/s por pod"
+        }
+      ],
+      "datasource": { "type": "prometheus", "uid": "prometheus" }
     }
   ],
   "time": { "from": "now-5m", "to": "now" },

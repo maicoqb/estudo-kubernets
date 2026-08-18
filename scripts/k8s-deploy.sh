@@ -42,6 +42,7 @@ minikube kubectl -- create configmap grafana-dashboards-json \
   -n estore --dry-run=client -o yaml | minikube kubectl -- apply -f -
 
 minikube kubectl -- apply -f infra/k8s/postgres.yaml
+minikube kubectl -- apply -f infra/k8s/prometheus-rbac.yaml
 minikube kubectl -- apply -f infra/k8s/prometheus.yaml
 minikube kubectl -- apply -f infra/k8s/grafana.yaml
 minikube kubectl -- apply -f infra/k8s/products-service.yaml

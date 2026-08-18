@@ -4,5 +4,14 @@ global:
 scrape_configs:
   - job_name: 'products-service'
     metrics_path: '/api/metrics'
-    static_configs:
-      - targets: ['products-service:3000']
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names: ['estore']
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        regex: products-service
+        action: keep
+      - source_labels: [__meta_kubernetes_pod_container_port_number]
+        regex: "3000"
+        action: keep
