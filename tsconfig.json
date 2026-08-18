@@ -5,6 +5,9 @@
   "references": [
     {
       "path": "./apps/products-service"
+    },
+    {
+      "path": "./apps/orders-service"
     }
   ]
 }

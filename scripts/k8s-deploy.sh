@@ -12,7 +12,7 @@ eval $(minikube docker-env)
 ###     Build das Imagens     ###
 #################################
 echo "==> Buildando imagem do products-service..."
-docker build -f apps/products-service/Dockerfile -t products-service:latest .
+docker build --build-arg APP_NAME=products-service -t products-service:latest .
 
 echo "==> Buildando imagem do seed..."
 docker build -f seeds/Dockerfile -t seed-products:latest seeds/

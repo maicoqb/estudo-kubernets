@@ -28,7 +28,9 @@ services:
   products-service:
     build:
       context: .
-      dockerfile: apps/products-service/Dockerfile
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: products-service
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
     ports:
@@ -42,6 +44,42 @@ services:
         limits:
           memory: 128M
           cpus: "0.5"
+
+  orders-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: orders-service
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@rabbitmq:5672
+    ports:
+      - "3002:3000"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.5"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   prometheus:
     image: prom/prometheus
