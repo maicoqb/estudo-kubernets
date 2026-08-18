@@ -35,6 +35,12 @@ Sequência cronológica do estudo.
 2. Load test com k6 — dispara hang no segundo 60
 3. Docker não detecta (container fica "running")
 
+#### Solução (Kubernetes)
+
+1. livenessProbe detecta que /api/health não responde
+2. K8s sobe um novo pod e mata o antigo
+3. Requests voltam ao normal
+
 ## Fase 3
 
 ### Cenário 3 — Fila acumula
