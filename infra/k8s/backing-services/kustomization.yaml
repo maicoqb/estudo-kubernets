@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - postgres.yaml
+  - grafana.yaml
+  - prometheus/
+configMapGenerator:
+  - name: grafana-datasources
+    namespace: estore
+    files:
+      - datasources.yml=../../shared/grafana/datasources.yml
+    options:
+      disableNameSuffixHash: true
+  - name: grafana-dashboards-provider
+    namespace: estore
+    files:
+      - dashboards.yml=../../shared/grafana/dashboards.yml
+    options:
+      disableNameSuffixHash: true
+  - name: grafana-dashboards-json
+    namespace: estore
+    files:
+      - products-service.json=../../shared/grafana/dashboards/products-service.json
+    options:
+      disableNameSuffixHash: true

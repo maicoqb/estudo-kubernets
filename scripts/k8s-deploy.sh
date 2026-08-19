@@ -21,32 +21,8 @@ docker build -f seeds/Dockerfile -t seed-products:latest seeds/
 #################################
 ###  Aplicando os Deployments ###
 #################################
-echo "==> Aplicando manifests..."
-minikube kubectl -- apply -f infra/k8s/namespace.yaml
-
-echo "==> Criando ConfigMaps a partir dos arquivos..."
-minikube kubectl -- create configmap prometheus-config \
-  --from-file=prometheus.yml=infra/prometheus/prometheus.yml \
-  -n estore --dry-run=client -o yaml | minikube kubectl -- apply -f -
-
-minikube kubectl -- create configmap grafana-datasources \
-  --from-file=datasources.yml=infra/grafana/datasources.yml \
-  -n estore --dry-run=client -o yaml | minikube kubectl -- apply -f -
-
-minikube kubectl -- create configmap grafana-dashboards-provider \
-  --from-file=dashboards.yml=infra/grafana/dashboards.yml \
-  -n estore --dry-run=client -o yaml | minikube kubectl -- apply -f -
-
-minikube kubectl -- create configmap grafana-dashboards-json \
-  --from-file=infra/grafana/dashboards/products-service.json \
-  -n estore --dry-run=client -o yaml | minikube kubectl -- apply -f -
-
-minikube kubectl -- apply -f infra/k8s/postgres.yaml
-minikube kubectl -- apply -f infra/k8s/prometheus-rbac.yaml
-minikube kubectl -- apply -f infra/k8s/prometheus.yaml
-minikube kubectl -- apply -f infra/k8s/grafana.yaml
-minikube kubectl -- apply -f infra/k8s/products-service.yaml
-minikube kubectl -- apply -f infra/k8s/hpa.yaml
+echo "==> Aplicando manifests com Kustomize..."
+minikube kubectl -- kustomize infra/k8s/ --load-restrictor LoadRestrictionsNone | minikube kubectl -- apply -f -
 
 echo "==> Rodando seed..."
 minikube kubectl -- delete job seed-products -n estore --ignore-not-found
@@ -78,5 +54,5 @@ minikube kubectl -- get pods -n estore
 
 echo ""
 echo "✔ Deploy concluído!"
-echo "  App: http://localhost:3000/api/products"
-echo "  Grafana: http://localhost:3001 (admin/admin)"
+echo "  Products API: http://localhost:3000/api/products"
+echo "  Grafana:      http://localhost:3001 (admin/admin)"
