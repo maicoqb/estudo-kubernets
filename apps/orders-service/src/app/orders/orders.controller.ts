@@ -9,6 +9,6 @@ export class OrdersController {
   @Post()
   @HttpCode(201)
   create(@Body() dto: CreateOrderDto) {
-    return this.ordersService.create(dto.productId, dto.quantity, dto.totalPrice);
+    return this.ordersService.create(dto.cartId, dto.productId, dto.quantity, dto.totalPrice);
   }
 }

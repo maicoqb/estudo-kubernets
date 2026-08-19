@@ -30,17 +30,22 @@ export const options = {
 };
 
 export function addToCart() {
-  const res = http.post('http://localhost:3002/api/cart');
+  const res = http.post('http://localhost:3003/api/carts');
 
   check(res, {
-    'cart added': (r) => r.status === 201,
+    'cart created': (r) => r.status === 201,
   });
 
   sleep(Math.random() * 5 + 2);
 }
 
 export function placeOrder() {
+  // Cria um carrinho e imediatamente faz checkout (simula conversão)
+  const cartRes = http.post('http://localhost:3003/api/carts');
+  const cartId = cartRes.json('id');
+
   const payload = JSON.stringify({
+    cartId,
     productId: Math.floor(Math.random() * 100) + 1,
     quantity: Math.floor(Math.random() * 5) + 1,
     totalPrice: Number((Math.random() * 200 + 10).toFixed(2)),

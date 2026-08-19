@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { Order } from './order.entity';
 import { RabbitMQService } from '../rabbitmq.service';
 
+const CARTS_SERVICE_URL = process.env.CARTS_SERVICE_URL || 'http://carts-service:3000';
+
 @Injectable()
 export class OrdersService {
   constructor(
@@ -12,7 +14,7 @@ export class OrdersService {
     private readonly rabbitMQService: RabbitMQService,
   ) {}
 
-  async create(productId: number, quantity: number, totalPrice: number): Promise<Order> {
+  async create(cartId: string, productId: number, quantity: number, totalPrice: number): Promise<Order> {
     const order = await this.ordersRepository.save({ productId, quantity, totalPrice });
 
     // Publica evento order.created para o payment-worker processar
@@ -20,6 +22,9 @@ export class OrdersService {
       orderId: order.id,
       totalPrice,
     });
+
+    // Fecha o carrinho no carts-service
+    await fetch(`${CARTS_SERVICE_URL}/api/carts/${cartId}`, { method: 'DELETE' });
 
     return order;
   }

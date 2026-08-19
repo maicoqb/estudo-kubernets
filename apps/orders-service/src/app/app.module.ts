@@ -5,6 +5,7 @@ import { OrdersService } from './orders/orders.service';
 import { RabbitMQService } from './rabbitmq.service';
 import { HealthController } from './health.controller';
 import { Order } from './orders/order.entity';
+import { MetricsModule } from './metrics/metrics.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { Order } from './orders/order.entity';
       synchronize: true,
     }),
     TypeOrmModule.forFeature([Order]),
+    MetricsModule,
   ],
   controllers: [OrdersController, HealthController],
   providers: [OrdersService, RabbitMQService],

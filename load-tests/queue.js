@@ -11,7 +11,12 @@ export const options = {
 };
 
 export default function () {
+  // Cria um carrinho no carts-service
+  const cartRes = http.post('http://localhost:3003/api/carts');
+  const cartId = cartRes.json('id');
+
   const payload = JSON.stringify({
+    cartId,
     productId: Math.floor(Math.random() * 100) + 1,
     quantity: Math.floor(Math.random() * 5) + 1,
     totalPrice: Number((Math.random() * 200 + 10).toFixed(2)),
