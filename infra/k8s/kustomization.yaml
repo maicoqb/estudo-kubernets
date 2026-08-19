@@ -4,4 +4,6 @@ resources:
   - namespace.yaml
   - backing-services/
   - products-service/
+  - orders-service/
+  - payments-worker/
   - seed-job.yaml

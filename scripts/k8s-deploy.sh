@@ -14,6 +14,12 @@ eval $(minikube docker-env)
 echo "==> Buildando imagem do products-service..."
 docker build --build-arg APP_NAME=products-service -t products-service:latest .
 
+echo "==> Buildando imagem do orders-service..."
+docker build --build-arg APP_NAME=orders-service -t orders-service:latest .
+
+echo "==> Buildando imagem do payments-worker..."
+docker build --build-arg APP_NAME=payments-worker -t payments-worker:latest .
+
 echo "==> Buildando imagem do seed..."
 docker build -f seeds/Dockerfile -t seed-products:latest seeds/
 
@@ -21,6 +27,15 @@ docker build -f seeds/Dockerfile -t seed-products:latest seeds/
 #################################
 ###  Aplicando os Deployments ###
 #################################
+echo "==> Habilitando metrics-server..."
+minikube addons enable metrics-server
+
+echo "==> Instalando KEDA..."
+minikube kubectl -- apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.16.1/keda-2.16.1.yaml
+
+echo "==> Aguardando KEDA ficar pronto..."
+minikube kubectl -- wait --for=condition=Available deployment/keda-operator -n keda --timeout=120s
+
 echo "==> Aplicando manifests com Kustomize..."
 minikube kubectl -- kustomize infra/k8s/ --load-restrictor LoadRestrictionsNone | minikube kubectl -- apply -f -
 
@@ -33,14 +48,12 @@ minikube kubectl -- apply -f infra/k8s/seed-job.yaml
 ###      Tunnel e Grafana     ###
 #################################
 echo "==> Aguardando pods ficarem prontos..."
-minikube kubectl -- wait --for=condition=Ready pod -l app=products-service -n estore --timeout=300s
 minikube kubectl -- wait --for=condition=Ready pod -l app=grafana -n estore --timeout=300s
+minikube kubectl -- wait --for=condition=Ready pod -l app=orders-service -n estore --timeout=300s
 
-echo "==> Iniciando tunnel e port-forward..."
+echo "==> Iniciando tunnel..."
 pkill -f "minikube tunnel" 2>/dev/null || true
-pkill -f "port-forward.*grafana" 2>/dev/null || true
-minikube tunnel > /dev/null 2>&1 &
-minikube kubectl -- port-forward -n estore svc/grafana 3001:3000 > /dev/null 2>&1 &
+nohup minikube tunnel > /dev/null 2>&1 &
 
 
 #################################
@@ -55,4 +68,5 @@ minikube kubectl -- get pods -n estore
 echo ""
 echo "✔ Deploy concluído!"
 echo "  Products API: http://localhost:3000/api/products"
+echo "  Orders API:   http://localhost:3002/api/orders"
 echo "  Grafana:      http://localhost:3001 (admin/admin)"

@@ -15,3 +15,17 @@ scrape_configs:
       - source_labels: [__meta_kubernetes_pod_container_port_number]
         regex: "3000"
         action: keep
+
+  - job_name: 'rabbitmq'
+    metrics_path: '/metrics/per-object'
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names: ['estore']
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        regex: rabbitmq
+        action: keep
+      - source_labels: [__meta_kubernetes_pod_container_port_number]
+        regex: "15692"
+        action: keep

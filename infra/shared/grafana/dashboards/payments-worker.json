@@ -44,7 +44,7 @@
       "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
       "targets": [
         {
-          "expr": "rate(rabbitmq_channel_messages_acked_total[30s])",
+          "expr": "sum(rate(rabbitmq_channel_messages_acked_total[30s]))",
           "legendFormat": "acked/s"
         }
       ],

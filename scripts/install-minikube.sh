@@ -13,9 +13,6 @@ fi
 echo "==> Verificando instalação..."
 minikube version
 
-echo "==> Habilitando addons..."
-minikube addons enable metrics-server
-
 echo ""
 echo "✔ Minikube pronto!"
 echo "  Para iniciar: npm run minikube:start"

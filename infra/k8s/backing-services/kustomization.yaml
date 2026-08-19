@@ -2,6 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - postgres.yaml
+  - rabbitmq.yaml
   - grafana.yaml
   - prometheus/
 configMapGenerator:
@@ -21,5 +22,6 @@ configMapGenerator:
     namespace: estore
     files:
       - products-service.json=../../shared/grafana/dashboards/products-service.json
+      - payments-worker.json=../../shared/grafana/dashboards/payments-worker.json
     options:
       disableNameSuffixHash: true
