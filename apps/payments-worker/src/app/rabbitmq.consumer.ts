@@ -21,6 +21,8 @@ export class RabbitMQConsumer implements OnModuleInit {
     await this.channel.assertQueue(QUEUE, { durable: true });
     await this.channel.bindQueue(QUEUE, EXCHANGE, ROUTING_KEY);
 
+    await this.channel.prefetch(100);
+
     this.channel.consume(QUEUE, async (msg) => {
       if (!msg) return;
 

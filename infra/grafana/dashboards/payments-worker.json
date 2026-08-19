@@ -1,0 +1,82 @@
+{
+  "title": "Payments Worker",
+  "uid": "payments-worker",
+  "panels": [
+    {
+      "title": "Queue Depth",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "rabbitmq_queue_messages_ready{queue=\"payments\"}",
+          "legendFormat": "messages ready"
+        }
+      ],
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "fillOpacity": 20 },
+          "color": { "mode": "fixed", "fixedColor": "red" }
+        }
+      }
+    },
+    {
+      "title": "In-Flight (unacked)",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "rabbitmq_queue_messages_unacked{queue=\"payments\"}",
+          "legendFormat": "unacked"
+        }
+      ],
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "fillOpacity": 20 },
+          "color": { "mode": "fixed", "fixedColor": "orange" }
+        }
+      }
+    },
+    {
+      "title": "Throughput (acked/s)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "rate(rabbitmq_channel_messages_acked_total[30s])",
+          "legendFormat": "acked/s"
+        }
+      ],
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "fillOpacity": 20 },
+          "color": { "mode": "fixed", "fixedColor": "green" }
+        }
+      }
+    },
+    {
+      "title": "Workers Ativos",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "rabbitmq_queue_consumers{queue=\"payments\"}",
+          "legendFormat": "consumers"
+        }
+      ],
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "decimals": 0,
+          "custom": { "fillOpacity": 20 }
+        }
+      }
+    }
+  ],
+  "time": { "from": "now-5m", "to": "now" },
+  "refresh": "5s",
+  "schemaVersion": 38
+}
