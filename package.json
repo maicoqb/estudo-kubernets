@@ -14,7 +14,8 @@
     "k8s:start": "npm run minikube:start && npm run k8s:deploy",
     "k8s:stop": "npm run minikube:stop",
     "k8s:deploy": "bash scripts/k8s-deploy.sh",
-    "k8s:pods": "minikube kubectl -- get pods -n estore"
+    "k8s:pods": "minikube kubectl -- get pods -n estore",
+    "k8s:logs": "minikube kubectl -- logs -n estore --tail=100 -f -l"
   },
   "private": true,
   "devDependencies": {

@@ -31,6 +31,7 @@ Mais informações nos arquivo específicos de cada cenário.
 | `npm run k8s:stop` | Para o Minikube |
 | `npm run k8s:deploy` | Builda imagem e deploya no Minikube |
 | `npm run k8s:pods` | Lista pods no cluster |
+| `npm run k8s:logs -- app=<name>` | Logs de um pod |
 
 ### Tests
 
