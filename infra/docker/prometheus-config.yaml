@@ -7,6 +7,16 @@ scrape_configs:
     static_configs:
       - targets: ['products-service:3000']
 
+  - job_name: 'orders-service'
+    metrics_path: '/api/metrics'
+    static_configs:
+      - targets: ['orders-service:3000']
+
+  - job_name: 'carts-service'
+    metrics_path: '/api/metrics'
+    static_configs:
+      - targets: ['carts-service:3000']
+
   - job_name: 'rabbitmq'
     static_configs:
       - targets: ['rabbitmq:15692']

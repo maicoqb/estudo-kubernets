@@ -1,9 +1,11 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
+const cartIds = [];
+
 export const options = {
   scenarios: {
-    // Fase 1: abre carrinhos (leading indicator para o HPA)
+    // Fase 1: abre carrinhos (open_carts sobe, dispara HPA)
     open_carts: {
       executor: 'ramping-vus',
       startVUs: 0,
@@ -12,37 +14,46 @@ export const options = {
         { duration: '60s', target: 500 },
         { duration: '30s', target: 0 },
       ],
-      exec: 'addToCart',
+      gracefulRampDown: '0s',
+      exec: 'openCart',
     },
-    // Fase 2: burst de pedidos começa após 40s
+    // Fase 2: faz pedidos consumindo os carts (open_carts desce)
     place_orders: {
       executor: 'ramping-vus',
       startVUs: 0,
-      startTime: '40s',
+      startTime: '90s',
       stages: [
-        { duration: '20s', target: 200 },
-        { duration: '40s', target: 500 },
-        { duration: '20s', target: 0 },
+        { duration: '30s', target: 300 },
+        { duration: '120s', target: 500 },
+        { duration: '30s', target: 0 },
       ],
+      gracefulRampDown: '30s',
       exec: 'placeOrder',
     },
   },
 };
 
-export function addToCart() {
+export function openCart() {
   const res = http.post('http://localhost:3003/api/carts');
 
   check(res, {
     'cart created': (r) => r.status === 201,
   });
 
-  sleep(Math.random() * 5 + 2);
+  if (res.status === 201) {
+    cartIds.push(res.json('id'));
+  }
+
+  sleep(Math.random() * 2 + 1);
 }
 
 export function placeOrder() {
-  // Cria um carrinho e imediatamente faz checkout (simula conversão)
-  const cartRes = http.post('http://localhost:3003/api/carts');
-  const cartId = cartRes.json('id');
+  const cartId = cartIds.shift();
+
+  if (!cartId) {
+    sleep(1);
+    return;
+  }
 
   const payload = JSON.stringify({
     cartId,

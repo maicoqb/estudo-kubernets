@@ -1,14 +1,36 @@
 {
-  "title": "Products Service",
-  "uid": "products-service",
+  "title": "Orders Service",
+  "uid": "orders-service",
   "panels": [
+    {
+      "title": "Open Carts",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "open_carts",
+          "legendFormat": "open carts",
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "decimals": 0,
+          "custom": { "fillOpacity": 20 },
+          "color": { "mode": "fixed", "fixedColor": "orange" }
+        },
+        "overrides": []
+      }
+    },
     {
       "title": "Requests por segundo",
       "type": "timeseries",
-      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
       "targets": [
         {
-          "expr": "sum(rate(http_requests_total{job=\"products-service\"}[1m])) by (path)",
+          "expr": "sum(rate(http_requests_total{job=\"orders-service\"}[1m])) by (path)",
           "legendFormat": "{{path}}"
         }
       ],
@@ -17,10 +39,10 @@
     {
       "title": "Latência p95",
       "type": "timeseries",
-      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"products-service\"}[1m])) by (le, path))",
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"orders-service\"}[1m])) by (le, path))",
           "legendFormat": "{{path}}"
         }
       ],
@@ -44,12 +66,31 @@
       }
     },
     {
-      "title": "CPU Usage (média)",
+      "title": "Pods Ativos",
       "type": "timeseries",
-      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
       "targets": [
         {
-          "expr": "avg(rate(process_cpu_seconds_total{job=\"products-service\"}[1m]))",
+          "expr": "count(up{job=\"orders-service\"} == 1)",
+          "legendFormat": "pods"
+        }
+      ],
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 5,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "title": "CPU Usage (média)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "avg(rate(process_cpu_seconds_total{job=\"orders-service\"}[1m]))",
           "legendFormat": "cpu avg"
         }
       ],
@@ -77,10 +118,10 @@
     {
       "title": "Memória (média)",
       "type": "timeseries",
-      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "gridPos": { "x": 12, "y": 16, "w": 12, "h": 8 },
       "targets": [
         {
-          "expr": "avg(process_resident_memory_bytes{job=\"products-service\"}) / (128 * 1024 * 1024)",
+          "expr": "avg(process_resident_memory_bytes{job=\"orders-service\"}) / (128 * 1024 * 1024)",
           "legendFormat": "memory avg"
         }
       ],
@@ -104,37 +145,6 @@
           }
         }
       }
-    },
-    {
-      "title": "Pods ativos",
-      "type": "timeseries",
-      "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 },
-      "targets": [
-        {
-          "expr": "count(up{job=\"products-service\"} == 1)",
-          "legendFormat": "pods"
-        }
-      ],
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "fieldConfig": {
-        "defaults": {
-          "min": 0,
-          "max": 5,
-          "decimals": 0
-        }
-      }
-    },
-    {
-      "title": "Requests por pod",
-      "type": "timeseries",
-      "gridPos": { "x": 12, "y": 16, "w": 12, "h": 8 },
-      "targets": [
-        {
-          "expr": "avg(sum(rate(http_requests_total{job=\"products-service\"}[1m])) by (instance))",
-          "legendFormat": "avg req/s por pod"
-        }
-      ],
-      "datasource": { "type": "prometheus", "uid": "prometheus" }
     }
   ],
   "time": { "from": "now-5m", "to": "now" },

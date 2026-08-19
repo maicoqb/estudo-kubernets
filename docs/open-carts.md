@@ -1,6 +1,6 @@
 # Cenário 4 — Carrinhos Abertos (Métrica Custom)
 
-Muitos carrinhos abertos indicam pico de compras iminente. Docker não reage.
+Muitos carrinhos abertos indicam pico de compras iminente.
 
 ## Load Test
 
@@ -8,13 +8,15 @@ Muitos carrinhos abertos indicam pico de compras iminente. Docker não reage.
 npm run test:open-carts
 ```
 
+Simula muitos carrinhos abertos e logo em seguida um pico de orders feitas.
+
 ## O problema (Docker)
 
 Carrinhos acumulam, orders degrada. Docker não sabe que a demanda está crescendo.
 
-- Carrinhos abertos passam de 100
-- Tempo de resposta do order aumenta
-- Sem escala, pedidos falham ou atrasam
+- Carrinhos abertos passam de 5000
+- Aumento de requisições no orders
+- Latência, CPU e Memória aumentam acima do threshold
 
 ![open-carts-docker-dashboard](open-carts-docker-dashboard.png)
 
@@ -22,7 +24,7 @@ Carrinhos acumulam, orders degrada. Docker não sabe que a demanda está crescen
 
 HPA monitora a métrica `open_carts` do carts-service e escala o orders-service proativamente.
 
-- `open_carts` > 100 por pod → HPA adiciona pods
+- `open_carts` > 5000 por pod → HPA adiciona pods
 - Mais pods = mais capacidade para absorver o checkout
 - Carrinhos reduzem → após 60s de cooldown, pods extras são removidos
 
