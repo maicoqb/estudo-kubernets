@@ -12,7 +12,7 @@ Mais informações nos arquivo específicos de cada cenário.
 | 1 | [Excesso de chamadas](./docs/high-load.md) | App degrada, sem reação | HPA escala por CPU |
 | 2 | [App trava](./docs/hang.md) | Container fica "running" mas não responde | Probes detectam e reiniciam |
 | 3 | [Fila acumula](./docs/queue.md) | Workers não dão conta | KEDA escala workers por tamanho da fila |
-| 4 | Busca lenta (SLA violado) | App saudável mas experiência degradada | HPA escala por métrica custom (latência p95) |
+| 4 | [Carrinhos abertos](./docs/open-carts.md) | App saudável mas checkout degrada | HPA escala por métrica custom (open_carts) |
 
 ## Comandos
 
@@ -41,6 +41,7 @@ Mais informações nos arquivo específicos de cada cenário.
 | `npm run test:high-load` | Load test — rampa até 500 VUs por 2min |
 | `npm run test:hang` | Load test — trava a app no segundo 60 |
 | `npm run test:queue` | Load test — burst de pedidos na fila |
+| `npm run test:open-carts` | Load test — carrinhos acumulando |
 
 ## Documentação
 

@@ -9,6 +9,7 @@
     "test:high-load": "docker compose -f load-tests/docker-compose.yml run --rm k6 run /scripts/high-load.js",
     "test:hang": "docker compose -f load-tests/docker-compose.yml run --rm k6 run /scripts/hang.js",
     "test:queue": "docker compose -f load-tests/docker-compose.yml run --rm k6 run /scripts/queue.js",
+    "test:open-carts": "docker compose -f load-tests/docker-compose.yml run --rm k6 run /scripts/open-carts.js",
     "minikube:start": "minikube start --driver=docker --memory=6144 --cpus=4",
     "minikube:stop": "minikube stop",
     "k8s:start": "npm run minikube:start && npm run k8s:deploy",
