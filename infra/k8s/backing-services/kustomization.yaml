@@ -22,6 +22,7 @@ configMapGenerator:
     namespace: estore
     files:
       - products-service.json=../../shared/grafana/dashboards/products-service.json
+      - orders-service.json=../../shared/grafana/dashboards/orders-service.json
       - payments-worker.json=../../shared/grafana/dashboards/payments-worker.json
     options:
       disableNameSuffixHash: true

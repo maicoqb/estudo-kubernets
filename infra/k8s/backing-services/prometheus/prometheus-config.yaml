@@ -16,6 +16,34 @@ scrape_configs:
         regex: "3000"
         action: keep
 
+  - job_name: 'orders-service'
+    metrics_path: '/api/metrics'
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names: ['estore']
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        regex: orders-service
+        action: keep
+      - source_labels: [__meta_kubernetes_pod_container_port_number]
+        regex: "3000"
+        action: keep
+
+  - job_name: 'carts-service'
+    metrics_path: '/api/metrics'
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names: ['estore']
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        regex: carts-service
+        action: keep
+      - source_labels: [__meta_kubernetes_pod_container_port_number]
+        regex: "3000"
+        action: keep
+
   - job_name: 'rabbitmq'
     metrics_path: '/metrics/per-object'
     kubernetes_sd_configs:

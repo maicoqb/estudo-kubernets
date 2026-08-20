@@ -17,6 +17,9 @@ docker build --build-arg APP_NAME=products-service -t products-service:latest .
 echo "==> Buildando imagem do orders-service..."
 docker build --build-arg APP_NAME=orders-service -t orders-service:latest .
 
+echo "==> Buildando imagem do carts-service..."
+docker build --build-arg APP_NAME=carts-service -t carts-service:latest .
+
 echo "==> Buildando imagem do payments-worker..."
 docker build --build-arg APP_NAME=payments-worker -t payments-worker:latest .
 
@@ -45,12 +48,8 @@ minikube kubectl -- apply -f infra/k8s/seed-job.yaml
 
 
 #################################
-###      Tunnel e Grafana     ###
+###           Tunnel          ###
 #################################
-echo "==> Aguardando pods ficarem prontos..."
-minikube kubectl -- wait --for=condition=Ready pod -l app=grafana -n estore --timeout=300s
-minikube kubectl -- wait --for=condition=Ready pod -l app=orders-service -n estore --timeout=300s
-
 echo "==> Iniciando tunnel..."
 pkill -f "minikube tunnel" 2>/dev/null || true
 nohup minikube tunnel > /dev/null 2>&1 &
@@ -69,4 +68,5 @@ echo ""
 echo "✔ Deploy concluído!"
 echo "  Products API: http://localhost:3000/api/products"
 echo "  Orders API:   http://localhost:3002/api/orders"
+echo "  Carts API:    http://localhost:3003/api/carts"
 echo "  Grafana:      http://localhost:3001 (admin/admin)"
