@@ -43,6 +43,12 @@ scrape_configs:
       - source_labels: [__meta_kubernetes_pod_container_port_number]
         regex: "3000"
         action: keep
+      - source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+      - target_label: service
+        replacement: carts-service
 
   - job_name: 'rabbitmq'
     metrics_path: '/metrics/per-object'

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-adapter-config
+  namespace: estore
+data:
+  config.yaml: |
+    rules:
+      - seriesQuery: 'open_carts{namespace="estore", service="carts-service"}'
+        resources:
+          overrides:
+            namespace:
+              resource: namespace
+            pod:
+              resource: pod
+            service:
+              resource: service
+        name:
+          matches: "^(.*)$"
+          as: "open_carts"
+        metricsQuery: 'open_carts{namespace="estore", service="carts-service"}'

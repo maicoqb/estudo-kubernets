@@ -17,12 +17,23 @@ spec:
         target:
           type: Utilization
           averageUtilization: 50
+    - type: Object
+      object:
+        describedObject:
+          apiVersion: v1
+          kind: Service
+          name: carts-service
+        metric:
+          name: open_carts
+        target:
+          type: Value
+          value: "1000"
   behavior:
     scaleUp:
-      stabilizationWindowSeconds: 15
+      stabilizationWindowSeconds: 30
       policies:
         - type: Pods
           value: 2
-          periodSeconds: 15
+          periodSeconds: 60
     scaleDown:
       stabilizationWindowSeconds: 60

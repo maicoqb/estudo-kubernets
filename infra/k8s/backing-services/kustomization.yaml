@@ -5,6 +5,7 @@ resources:
   - rabbitmq.yaml
   - grafana.yaml
   - prometheus/
+  - prometheus-adapter/
 configMapGenerator:
   - name: grafana-datasources
     namespace: estore

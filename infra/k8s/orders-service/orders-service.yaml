@@ -6,6 +6,7 @@ metadata:
 stringData:
   DATABASE_URL: postgresql://store:store123@postgres:5432/products
   RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+  CARTS_SERVICE_URL: http://carts-service:3003
 ---
 apiVersion: apps/v1
 kind: Deployment
