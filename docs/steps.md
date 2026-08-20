@@ -45,4 +45,35 @@ Sequência cronológica do estudo.
 
 ### Cenário 3 — Fila acumula
 
-_(próximo)_
+#### Introdução do problema (Docker)
+
+1. `orders-service` com endpoint `POST /api/orders` — publica evento no RabbitMQ
+2. `payments-worker` consome da fila e processa pagamentos
+3. Load test com burst de pedidos — fila cresce, workers não acompanham
+4. Docker não escala workers automaticamente
+
+#### Solução (Kubernetes)
+
+1. Deployment do orders-service + payments-worker
+2. KEDA instalado no cluster (ScaledObject por tamanho da fila)
+3. `rabbitmq_queue_messages_ready` > threshold → KEDA escala payments-worker
+4. Fila é consumida, workers extras são removidos após cooldown
+
+## Fase 4
+
+### Cenário 4 — Carrinhos abertos (métrica custom)
+
+#### Introdução do problema (Docker)
+
+1. `carts-service` com métrica custom `open_carts` (gauge via prom-client)
+2. `orders-service` chama `carts-service`
+3. Load test — muitos carrinhos abertos, seguido de pico de orders
+4. Docker não reage à demanda iminente, latência cresce
+
+#### Solução (Kubernetes)
+
+1. Deployment do carts-service
+2. Prometheus scrape do carts-service e custom metrics com Prometheus Adapter
+3. HPA do orders-service com base na métrica `open_carts`
+4. `open_carts` > 1000 → HPA escala orders-service proativamente
+5. Mais pods absorvem o pico de checkout sem degradar tanto a latência

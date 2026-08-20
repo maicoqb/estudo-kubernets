@@ -24,7 +24,7 @@ Carrinhos acumulam, orders degrada. Docker não sabe que a demanda está crescen
 
 HPA monitora a métrica `open_carts` do carts-service e escala o orders-service proativamente.
 
-- `open_carts` > 1000 por pod → HPA adiciona pods
+- `open_carts` > 1000 → HPA adiciona pods
 - Mais pods = mais capacidade para absorver o checkout
 - Carrinhos reduzem → após cooldown, pods extras são removidos
 
